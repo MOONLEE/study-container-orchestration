@@ -1,34 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sample-app-deployment
+  name: sample-app-deployment  # Deployment의 이름
 spec:
-  replicas: 3
+  replicas: 3  # Pod 복제본의 개수를 지정
+  strategy:  # 롤링 업데이트 전략 설정
+    type: RollingUpdate  # 기본값. 롤링 업데이트를 수행.
+    rollingUpdate:
+      maxUnavailable: 1  # 업데이트 중 비활성화될 수 있는 최대 Pod 수 (개수 또는 %)
+      maxSurge: 1        # 업데이트 중 추가로 생성할 수 있는 최대 Pod 수 (개수 또는 %)
   selector:
     matchLabels:
-      app: sample-app
+      app: sample-app  # 이 Deployment가 관리할 Pod를 식별하는 Label Selector
   template:
     metadata:
       labels:
-        app: sample-app
+        app: sample-app  # Pod에 적용될 Label. Service와 Selector로 연결됩니다.
     spec:
       imagePullSecrets:
-        - name: ncloud-registry-secret
+        - name: ncloud-registry-secret  # 프라이빗 레지스트리의 이미지를 가져오기 위한 Secret
       containers:
-        - name: sample-app
-          image: action.kr.ncr.ntruss.com/node-kubernetes-sampl
+        - name: sample-app  # 컨테이너 이름
+          image: action.kr.ncr.ntruss.com/node-kubernetes-sampl  # 컨테이너 이미지
           ports:
-            - containerPort: 3000
+            - containerPort: 3000  # 컨테이너에서 노출할 포트
+
 ---
+# Service 정의
+# Service는 클러스터 내에서 Pod로의 네트워크 접근을 관리하는 리소스입니다.
+# 아래는 "sample-app" Pod를 대상으로 트래픽을 라우팅하는 ClusterIP 타입의 Service입니다.
 apiVersion: v1
 kind: Service
 metadata:
-  name: sample-app-service
+  name: sample-app-service  # Service의 이름
 spec:
-  type: ClusterIP
+  type: ClusterIP  # 기본 Service 타입. 클러스터 내부에서만 접근 가능
   selector:
-    app: sample-app
+    app: sample-app  # 트래픽을 라우팅할 Pod를 선택하는 Label Selector
   ports:
-    - protocol: TCP
-      port: 3000
-      targetPort: 3000
+    - protocol: TCP  # 네트워크 프로토콜
+      port: 3000  # Service에서 노출하는 포트
+      targetPort: 3000  # Pod에서 사용하는 컨테이너 포트

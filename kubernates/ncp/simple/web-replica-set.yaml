@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: sample-app-replicaset
+spec:
+  replicas: 3  # 유지할 Pod 복제본 개수
+  selector:
+    matchLabels:
+      app: sample-app  # 관리할 Pod를 선택하는 라벨
+  template:
+    metadata:
+      labels:
+        app: sample-app  # Pod의 라벨 (Selector와 매칭)
+    spec:
+      containers:
+        - name: sample-app
+          image: nginx:latest
+          ports:
+            - containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sample-app-service
+spec:
+  type: ClusterIP
+  selector:
+    app: sample-app
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
