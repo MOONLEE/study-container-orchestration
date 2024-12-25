@@ -84,3 +84,39 @@ $ curl http://<로드밸런서 IP>
 # Hello Kubernetes!
 
 ```
+
+
+## 6. Rollout
+* 명령어
+```
+# 이미지 컨테이너 변경
+$ kubectl set image deployment/sample-app-deployment sample-app=action.kr.ncr.ntruss.com/node-kubernetes-sampl:${TAG_ID}
+
+# Pod 배포 상태 확인
+$ kubectl get pods -w
+
+# Pod이미지 태그 확인
+$ kubectl describe pod sample-app
+
+# 배포 이력 확인
+$ kubectl rollout history deployment/sample-app-deployment 
+
+```
+* yaml 파일 태그 변경 후 적용
+
+web-deployment.yaml
+```
+  containers:
+    - name: sample-app  # 컨테이너 이름
+      image: action.kr.ncr.ntruss.com/node-kubernetes-sampl:${TAG_ID}  # 컨테이너 이미지
+``` 
+kubectl 명령어로 yaml파일 적용
+```
+$ kubectl --kubeconfig kubeconfig.yaml apply -f web-deployment.yaml
+```
+
+## 7. Rollback
+```
+# 가장 최근 성공한 배포로 롤백
+$ kubectl rollout undo deployment/sample-app-deployment
+```
