@@ -1,0 +1,101 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  config.vm.box = "starboard/ubuntu-arm64-20.04.5"
+  config.vm.box_version = "20221120.20.40.0"
+
+  config.vm.provider "vmware_desktop" do |v|
+     # Display the VirtualBox GUI when booting the machine
+     v.allowlist_verified = true
+     v.ssh_info_public = true
+     v.gui = true
+     v.linked_clone = false
+     v.vmx["ethernet0.virtualdev"] = "vmxnet3"
+     v.vmx["memsize"] = "2048"
+     v.vmx["numvcpus"] = "2"
+  end
+
+  # Master Node 1
+  config.vm.define "vm1" do |vm1|
+    vm1.vm.hostname = "vm1.local"
+    vm1.vm.provider "vmware_desktop" do |v|
+      v.memory = "2048"
+      v.cpus = "2"
+    end
+  
+    vm1.vm.provision "shell", path: "script/install_containerd.sh"
+    vm1.vm.provision "shell", path: "script/install_k8s.sh"
+
+  end
+
+  # Master Node 2
+ config.vm.define "vm2" do |vm2|
+   vm2.vm.hostname = "vm2.local"
+   vm2.vm.provider "vmware_desktop" do |v|
+     v.memory = "2048"
+     v.cpus = "2"
+   end
+
+   vm2.vm.provision "shell", path: "script/install_containerd.sh"
+   vm2.vm.provision "shell", path: "script/install_k8s.sh"
+
+ end
+
+  # Master Node 3
+ config.vm.define "vm3" do |vm3|
+   vm3.vm.hostname = "vm3.local"
+   vm3.vm.provider "vmware_desktop" do |v|
+     v.memory = "2048"
+     v.cpus = "2"
+   end
+
+   vm3.vm.provision "shell", path: "script/install_containerd.sh"
+   vm3.vm.provision "shell", path: "script/install_k8s.sh"
+
+ end
+
+  # Worker Node 1
+  config.vm.define "vm4" do |vm4|
+    vm4.vm.hostname = "vm4.local"
+    vm4.vm.provider "vmware_desktop" do |v|
+       v.memory = "2048"
+       v.cpus = "2"
+    end
+
+    vm4.vm.provision "shell", path: "script/install_containerd.sh"
+    vm4.vm.provision "shell", path: "script/install_k8s.sh"
+
+  end
+
+  # Worker Node 2
+  config.vm.define "vm5" do |vm5|
+    vm5.vm.hostname = "vm5.local"
+    vm5.vm.provider "vmware_desktop" do |v|
+      v.memory = "2048"
+      v.cpus = "2"
+    end
+
+    vm5.vm.provision "shell", path: "script/install_containerd.sh"
+    vm5.vm.provision "shell", path: "script/install_k8s.sh"
+
+  end
+
+  # Worker Node 3
+ config.vm.define "vm6" do |vm6|
+   vm6.vm.hostname = "vm6.local"
+   vm6.vm.provider "vmware_desktop" do |v|
+     v.memory = "2048"
+     v.cpus = "2"
+   end
+
+   vm6.vm.provision "shell", path: "script/install_containerd.sh"
+   vm6.vm.provision "shell", path: "script/install_k8s.sh"
+
+ end
+ 
+end

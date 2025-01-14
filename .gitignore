@@ -91,4 +91,4 @@ modules.xml
 # End of https://www.toptal.com/developers/gitignore/api/intellij+iml
 
 # Vargant
-/vm_resource/vargrant/**/.vagrant/
+/vm_resource/vagrant/**/.vagrant/
