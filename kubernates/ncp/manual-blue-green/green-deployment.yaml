@@ -1,0 +1,22 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: naver-green
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: naver
+      version: green
+  template:
+    metadata:
+      labels:
+        app: naver
+        version: green
+    spec:
+      containers:
+        - name: naver
+          image: nks.kr.private-ncr.ntruss.com/hello:plain-text # 새로운 버전
+          ports:
+            - containerPort: 80
